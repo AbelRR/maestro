@@ -33,15 +33,22 @@ interface ClientBodyProps {
 }
 
 export default function ClientBody({ children }: ClientBodyProps) {
-  // Get API key from environment variables
-  const apiKey = process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY;
-
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiProvider config={wagmiConfig}>
-        <OnchainKitProvider 
+        <OnchainKitProvider
           chain={base}
-          apiKey={apiKey}
+          config={{
+            appearance: {
+              name: "Delphi AI",
+              logo: "/favicon.svg",
+              mode: "auto",
+              theme: "default",
+            },
+            wallet: {
+              display: "modal",
+            },
+          }}
         >
           <AuthProvider>
             <WalletProvider>

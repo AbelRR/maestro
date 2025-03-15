@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useAccount } from 'wagmi';
+import { useWallet } from '@/context/WalletContext';
+import { AccessPurchaseDetails } from '@/config/payment';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Loader2, Wallet } from 'lucide-react';
-import { Checkout, CheckoutButton, CheckoutStatus } from '@coinbase/onchainkit/checkout';
-import type { LifecycleStatus } from '@coinbase/onchainkit/checkout';
 
 interface ExpertPurchaseProps {
   expertSlug: string;
@@ -15,7 +14,6 @@ interface ExpertPurchaseProps {
   expertImage: string;
   price: number;
   currency?: string;
-  productId?: string; // Coinbase Commerce product ID
 }
 
 export function ExpertPurchase({ 
@@ -24,22 +22,20 @@ export function ExpertPurchase({
   expertName, 
   expertImage, 
   price, 
-  currency = 'USD',
-  productId, // Get this from your Coinbase Commerce dashboard
+  currency = 'USD'
 }: ExpertPurchaseProps) {
-  const { isConnected, address } = useAccount();
+  const { isConnected, address, connect } = useWallet();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [purchaseComplete, setPurchaseComplete] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isVerifying, setIsVerifying] = useState(false);
 
   const handleOpenPurchaseModal = () => {
     setShowPurchaseModal(true);
   };
 
   const handleClosePurchaseModal = () => {
-    if (!isPurchasing && !isVerifying) {
+    if (!isPurchasing) {
       setShowPurchaseModal(false);
       if (purchaseComplete) {
         setPurchaseComplete(false);
@@ -50,178 +46,42 @@ export function ExpertPurchase({
     }
   };
 
-  // This function is used to either:
-  // 1. Return the productId if provided directly
-  // 2. Create a charge dynamically using our API
-  const chargeHandler = useCallback(async (): Promise<string> => {
-    try {
-      // Create a charge dynamically using our API
-      const response = await fetch('/api/create-charge', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          expertId,
-          expertName,
-          price,
-          currency,
-          customerAddress: address,
-        }),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create charge');
-      }
-      
-      const data = await response.json();
-      
-      // Coinbase Commerce API returns the charge data with an 'id' field
-      if (data && data.data && data.data.id) {
-        console.log('Created charge:', data.data.id);
-        return data.data.id;
-      }
-      
-      throw new Error('Invalid response from charge creation API');
-    } catch (err) {
-      console.error('Error creating charge:', err);
-      setError(err instanceof Error ? err.message : 'Failed to create charge. Please try again.');
-      throw err;
+  const handlePurchase = async () => {
+    if (!isConnected || !address) {
+      // Need to connect wallet first
+      return;
     }
-  }, [expertId, expertName, price, currency, address]);
 
-  // Function to use a productId directly
-  const productHandler = useCallback(async (): Promise<string> => {
-    if (!productId) {
-      throw new Error('No product ID provided');
-    }
+    setIsPurchasing(true);
+    setError(null);
     
     try {
-      // For demo purposes, we'll create a charge from the productId
-      // In a real implementation, you'd handle this differently
-      console.log('Using product ID:', productId);
-      return productId;
-    } catch (err) {
-      console.error('Error with product ID:', err);
-      setError(err instanceof Error ? err.message : 'Failed to use product. Please try again.');
-      throw err;
-    }
-  }, [productId]);
+      // In a real implementation, this would connect to OnchainKit and process the transaction
+      // For now, we'll simulate a purchase process
+      const purchaseDetails: AccessPurchaseDetails = {
+        expertId,
+        expertName,
+        price,
+        currency,
+      };
 
-  // Verify payment on the backend
-  const verifyPayment = useCallback(async (chargeId: string) => {
-    if (!address) return;
-    
-    setIsVerifying(true);
-    
-    try {
-      const response = await fetch('/api/verify-payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chargeId,
-          expertId,
-          address,
-        }),
-      });
+      console.log('Processing purchase:', purchaseDetails);
       
-      const data = await response.json();
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      if (!response.ok) {
-        if (response.status === 202) {
-          // Payment is still pending, but that's okay
-          console.log('Payment verification pending:', data);
-          return;
-        }
-        
-        throw new Error(data.error || 'Failed to verify payment');
-      }
-      
-      // Payment verification successful
-      console.log('Payment verified:', data);
-      
-      // In a real app, you might:
-      // 1. Update local state with the access details
-      // 2. Store access token in localStorage
-      // 3. Update user permissions in your auth context
-      
-      // For demo purposes, we just set purchaseComplete
+      // Simulate successful purchase
       setPurchaseComplete(true);
+      
+      // In a real implementation, we would redirect to the expert page or update permissions
+      console.log('Purchase complete!');
     } catch (err) {
-      console.error('Payment verification error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to verify payment. Please contact support.');
+      console.error('Purchase error:', err);
+      setError(typeof err === 'string' ? err : 'An error occurred during the purchase process.');
     } finally {
-      setIsVerifying(false);
-    }
-  }, [expertId, address]);
-
-  // Handle checkout status changes
-  const handleStatus = useCallback((status: LifecycleStatus) => {
-    try {
-      const { statusName, statusData } = status;
-      
-      console.log('Checkout status:', statusName, statusData || {});
-      
-      switch (statusName) {
-        case 'init':
-          // Initial state
-          setIsPurchasing(false);
-          break;
-        case 'ready':
-          // Ready to process the transaction
-          setIsPurchasing(true);
-          setError(null);
-          break;
-        case 'fetchingData':
-          // Fetching data
-          setIsPurchasing(true);
-          break;
-        case 'pending':
-          // Transaction pending
-          setIsPurchasing(true);
-          break;
-        case 'success':
-          // Transaction successful
-          setIsPurchasing(false);
-          
-          // Verify the payment on our backend
-          if (statusData?.chargeId) {
-            verifyPayment(statusData.chargeId);
-          } else {
-            setPurchaseComplete(true);
-            console.warn('No chargeId in success status data');
-          }
-          break;
-        case 'error':
-          // Transaction failed
-          setIsPurchasing(false);
-          
-          // Safely extract error message from statusData if it exists
-          let errorMessage = 'Unknown error occurred during payment';
-          if (statusData) {
-            if (typeof statusData === 'object' && statusData !== null) {
-              if ('message' in statusData && typeof statusData.message === 'string') {
-                errorMessage = statusData.message;
-              } else if ('error' in statusData && typeof statusData.error === 'string') {
-                errorMessage = statusData.error;
-              }
-            } else if (typeof statusData === 'string') {
-              errorMessage = statusData;
-            }
-          }
-          
-          setError(`Payment error: ${errorMessage}`);
-          console.error('Payment error occurred:', errorMessage);
-          break;
-        default:
-          break;
-      }
-    } catch (err) {
-      // Handle any unexpected errors in the status handling
-      console.error('Error processing checkout status:', err);
       setIsPurchasing(false);
-      setError('An unexpected error occurred. Please try again.');
     }
-  }, [verifyPayment]);
+  };
 
   return (
     <>
@@ -271,33 +131,27 @@ export function ExpertPurchase({
               <DialogFooter>
                 {!isConnected ? (
                   <Button 
-                    onClick={() => setIsPurchasing(true)}
+                    onClick={() => connect()} 
                     className="w-full flex items-center gap-2"
                   >
                     <Wallet className="h-4 w-4" />
                     Connect Wallet
                   </Button>
                 ) : (
-                  <div className="w-full">
-                    {productId ? (
-                      <Checkout productId={productId} onStatus={handleStatus}>
-                        <CheckoutButton text={`Purchase for $${price}`} />
-                        <CheckoutStatus />
-                      </Checkout>
+                  <Button 
+                    onClick={handlePurchase} 
+                    disabled={isPurchasing}
+                    className="w-full"
+                  >
+                    {isPurchasing ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing...
+                      </>
                     ) : (
-                      <Checkout chargeHandler={chargeHandler} onStatus={handleStatus}>
-                        <CheckoutButton text={`Purchase for $${price}`} />
-                        <CheckoutStatus />
-                      </Checkout>
+                      `Purchase for $${price}`
                     )}
-                    
-                    {(isPurchasing || isVerifying) && (
-                      <div className="mt-4 flex items-center justify-center">
-                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                        <span>{isVerifying ? "Verifying payment..." : "Processing payment..."}</span>
-                      </div>
-                    )}
-                  </div>
+                  </Button>
                 )}
               </DialogFooter>
             </>
@@ -306,7 +160,7 @@ export function ExpertPurchase({
               <Button 
                 onClick={() => {
                   handleClosePurchaseModal();
-                  // Redirect to the expert's page
+                  // In a real implementation, we'd redirect to the expert's page
                   window.location.href = `/${expertSlug}`;
                 }}
                 className="w-full"

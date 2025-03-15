@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Wallet, LogOut } from 'lucide-react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useEffect } from 'react';
+import { injected } from 'wagmi/connectors';
 
 export function WalletButton() {
   const { logout, login } = useAuth();
@@ -13,17 +15,14 @@ export function WalletButton() {
   const { disconnect } = useDisconnect();
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // Handle wallet connection/disconnection with proper dependency tracking
+  // Handle wallet connection/disconnection
   useEffect(() => {
-    // Only attempt to login if connected and we have an address
     if (isConnected && address) {
       login(address);
     }
-    // Intentionally only depend on isConnected and address to prevent loops
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected, address]);
+  }, [isConnected, address, login]);
 
-  const handleConnectWallet = useCallback(async () => {
+  const handleConnectWallet = async () => {
     try {
       // Find the first available connector
       const connector = connectors[0];
@@ -33,17 +32,17 @@ export function WalletButton() {
     } catch (error) {
       console.error('Failed to connect wallet:', error);
     }
-  }, [connect, connectors]);
+  };
 
-  const handleDisconnect = useCallback(() => {
+  const handleDisconnect = () => {
     disconnect();
     logout();
     setShowDropdown(false);
-  }, [disconnect, logout]);
+  };
 
-  const formatAddress = useCallback((addr: string) => {
-    return `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
-  }, []);
+  const formatAddress = (address: string) => {
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  };
 
   return (
     <div className="relative">

@@ -5,19 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Wallet } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useConnect } from "wagmi";
-import { useCallback } from "react";
 
 export function AuthModalWrapper() {
   const { showAuthModal, setShowAuthModal } = useAuth();
   const { connect, isPending, connectors } = useConnect();
 
-  const handleConnect = useCallback(async () => {
+  const handleConnect = async () => {
     const connector = connectors[0];
     if (connector) {
       await connect({ connector });
       setShowAuthModal(false);
     }
-  }, [connect, connectors, setShowAuthModal]);
+  };
 
   return (
     <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>

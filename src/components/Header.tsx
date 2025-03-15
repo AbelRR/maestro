@@ -5,12 +5,12 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { Menu, X } from "lucide-react";
 import { WalletButton } from "@/components/WalletButton";
-import { useAccount } from "wagmi";
+import { useWallet } from "@/context/WalletContext";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useWallet();
   
   // Use wallet connection as authentication
   const isAuthenticated = isConnected && address !== undefined;

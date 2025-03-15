@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, Suspense, useCallback } from "react";
+import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Header } from "@/components/Header";
@@ -12,21 +12,15 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const next = searchParams.get("next") || "/";
 
-  // Use useEffect with proper dependency tracking to prevent infinite loops
   useEffect(() => {
-    // Create a flag to track if component is mounted to avoid state updates after unmount
-    let isMounted = true;
-
-    if (isAuthenticated && isMounted) {
+    // If already authenticated, redirect to the next URL
+    if (isAuthenticated) {
       router.push(next);
-    } else if (isMounted) {
-      setShowAuthModal(true);
+      return;
     }
 
-    // Cleanup function to set isMounted to false when component unmounts
-    return () => {
-      isMounted = false;
-    };
+    // Trigger the authentication modal through the auth context
+    setShowAuthModal(true);
   }, [router, setShowAuthModal, next, isAuthenticated]);
 
   return (

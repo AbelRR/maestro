@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const { connect, isPending, connectors } = useConnect();
   const [error, setError] = useState("");
 
-  const handleConnect = useCallback(async () => {
+  const handleConnect = async () => {
     setError("");
     try {
       const connector = connectors[0];
@@ -32,7 +32,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     } catch (err) {
       setError("Failed to connect wallet. Please try again.");
     }
-  }, [connect, connectors, address, login, onClose]);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
