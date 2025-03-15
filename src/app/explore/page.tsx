@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ExpertCard } from "@/components/ExpertCard";
 
 // Hero slider data
 const heroSlides = [
@@ -89,43 +90,6 @@ const personalDevelopmentExperts = [
     link: "/lewis-howes"
   },
 ];
-
-const ExpertCard = ({ expert }: { expert: any }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <div
-      className="relative rounded-lg overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="aspect-w-3 aspect-h-2 relative h-[240px]">
-        <Image
-          src={expert.image}
-          alt={expert.name}
-          fill
-          className="object-cover"
-          crossOrigin="anonymous"
-        />
-        {isHovered && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <Link href={expert.link}>
-              <Button className="rounded-full bg-orange-500 hover:bg-orange-600 text-white px-8">
-                Chat
-              </Button>
-            </Link>
-          </div>
-        )}
-      </div>
-      <div className="p-4 bg-white">
-        <h3 className="text-lg font-semibold">{expert.name}</h3>
-        {expert.title && (
-          <p className="text-gray-600 text-sm mt-1">{expert.title}</p>
-        )}
-      </div>
-    </div>
-  );
-};
 
 export default function ExplorePage() {
   const [activeCategory, setActiveCategory] = useState("highlighted");
@@ -245,7 +209,7 @@ export default function ExplorePage() {
           {/* Expert Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayExperts.map((expert) => (
-              <ExpertCard key={expert.id} expert={expert} />
+              <ExpertCard key={expert.id} expert={expert} showPurchase={true} />
             ))}
           </div>
         </div>

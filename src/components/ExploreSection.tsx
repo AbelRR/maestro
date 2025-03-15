@@ -1,12 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { useAuth } from "@/context/AuthContext";
+import { ExpertCard } from "@/components/ExpertCard";
 
 interface Expert {
   id: number;
@@ -14,6 +9,7 @@ interface Expert {
   title: string;
   image: string;
   link: string;
+  description: string;
 }
 
 const experts: Expert[] = [
@@ -23,6 +19,7 @@ const experts: Expert[] = [
     title: "High Performance Coach",
     image: "https://ext.same-assets.com/2705240281/1000014443.jpeg",
     link: "/brendon-burchard",
+    description: "The world's leading high performance coach and one of the most-watched, quoted, and followed personal development trainers of our time.",
   },
   {
     id: 2,
@@ -30,6 +27,7 @@ const experts: Expert[] = [
     title: "The School of Greatness",
     image: "https://ext.same-assets.com/2109823954/849522504.png",
     link: "/lewis-howes",
+    description: "Former pro athlete turned bestselling author and podcast host, focusing on business, relationships, and personal development.",
   },
   {
     id: 3,
@@ -37,6 +35,7 @@ const experts: Expert[] = [
     title: "Marketing Guru",
     image: "https://ext.same-assets.com/912308905/4211144141.jpeg",
     link: "/joe-polish",
+    description: "Founder of Genius Network, one of the highest-level marketing masterminds in the world, focusing on business growth strategies.",
   },
   {
     id: 4,
@@ -44,6 +43,7 @@ const experts: Expert[] = [
     title: "Entrepreneur, Writer, and Life Coach",
     image: "https://ext.same-assets.com/1923499456/3590525356.jpeg",
     link: "/marie-forleo",
+    description: "Named by Oprah as a thought leader for the next generation, Marie helps entrepreneurs build businesses and lives they love.",
   },
   {
     id: 5,
@@ -51,6 +51,7 @@ const experts: Expert[] = [
     title: "Co-Founder of Impact Theory",
     image: "https://ext.same-assets.com/1122016266/3530258868.jpeg",
     link: "/tom-bilyeu",
+    description: "After co-founding the billion-dollar brand Quest Nutrition, Tom now focuses on helping people develop the skills they need to improve themselves and the world.",
   },
   {
     id: 6,
@@ -58,6 +59,7 @@ const experts: Expert[] = [
     title: "CEO of VaynerMedia",
     image: "https://ext.same-assets.com/1801423781/2486219231.jpeg",
     link: "/gary-vaynerchuk",
+    description: "Serial entrepreneur and chairman of VaynerX, a modern-day media and communications holding company, focusing on digital marketing and entrepreneurship.",
   },
   {
     id: 7,
@@ -65,6 +67,7 @@ const experts: Expert[] = [
     title: "Motivational Speaker",
     image: "https://ext.same-assets.com/4132804743/1043940026.png",
     link: "/mel-robbins",
+    description: "Creator of the '5 Second Rule' and renowned for her practical, no-nonsense approach to personal development and overcoming anxiety.",
   },
   {
     id: 8,
@@ -72,6 +75,7 @@ const experts: Expert[] = [
     title: "Former Monk, Purpose Coach",
     image: "https://ext.same-assets.com/1210758745/849522504.png",
     link: "/jay-shetty",
+    description: "Former monk turned award-winning host, storyteller, and purpose coach, helping people find and pursue their purpose in life.",
   },
   {
     id: 9,
@@ -79,13 +83,13 @@ const experts: Expert[] = [
     title: "Author, Entrepreneur, Angel Investor",
     image: "https://ext.same-assets.com/1210758745/1043940026.png",
     link: "/tim-ferriss",
+    description: "Author of 'The 4-Hour Workweek' and host of The Tim Ferriss Show podcast, focusing on deconstructing world-class performers across various fields.",
   },
 ];
 
 const displayExperts: Expert[] = [
   ...experts.slice(0, 3),
-  ...experts.slice(0, 3),
-  ...experts.slice(0, 3),
+  ...experts.slice(3, 6),
 ];
 
 const categories = [
@@ -98,53 +102,6 @@ const categories = [
 
 export function ExploreSection() {
   const [activeCategory, setActiveCategory] = useState("all");
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
-
-  const handleChatClick = (e: React.MouseEvent, link: string) => {
-    e.preventDefault();
-    if (isAuthenticated) {
-      router.push(link);
-    } else {
-      router.push(`/login?next=${link}`);
-    }
-  };
-
-  const ExpertCard = ({ expert }: { expert: Expert }) => {
-    const [isHovered, setIsHovered] = useState(false);
-
-    return (
-      <Card className="overflow-hidden">
-        <div
-          className="relative h-64 w-full"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <Image
-            src={expert.image}
-            alt={expert.name}
-            fill
-            className="object-cover"
-            crossOrigin="anonymous"
-          />
-          {isHovered && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <Button 
-                className="bg-orange-500 hover:bg-orange-600 text-white rounded-full"
-                onClick={(e) => handleChatClick(e, expert.link)}
-              >
-                Chat
-              </Button>
-            </div>
-          )}
-        </div>
-        <CardContent className="p-4">
-          <h3 className="font-bold text-lg">{expert.name}</h3>
-          <p className="text-gray-500">{expert.title}</p>
-        </CardContent>
-      </Card>
-    );
-  };
 
   return (
     <section className="py-12">
@@ -170,7 +127,11 @@ export function ExploreSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayExperts.map((expert, index) => (
-            <ExpertCard key={`${expert.id}-${index}`} expert={expert} />
+            <ExpertCard 
+              key={`${expert.id}-${index}`} 
+              expert={expert}
+              showPurchase={true}
+            />
           ))}
         </div>
       </div>

@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { Menu, X } from "lucide-react";
+import { WalletButton } from "@/components/WalletButton";
+import { useAccount } from "wagmi";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuthenticated, setShowAuthModal, user } = useAuth();
-
-  const handleSignIn = () => {
-    setShowAuthModal(true);
-  };
+  const { user } = useAuth();
+  const { address, isConnected } = useAccount();
+  
+  // Use wallet connection as authentication
+  const isAuthenticated = isConnected && address !== undefined;
 
   return (
     <header className="border-b border-gray-200">
@@ -33,45 +33,13 @@ export function Header() {
               </div>
             </Link>
             <nav className="hidden md:flex ml-8 space-x-8">
-              {/* Explore link removed */}
-              {/* Pricing, About, and Docs links removed */}
+              {/* Navigation elements removed */}
             </nav>
           </div>
 
           <div className="flex items-center">
-            <div className="hidden md:flex">
-              {isAuthenticated ? (
-                <div className="flex items-center">
-                  {user && (
-                    <div className="mr-4 text-sm">
-                      <span className="text-gray-600">{user.name}</span>
-                    </div>
-                  )}
-                  <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
-                    {user && 'profilePic' in user ? (
-                      <Image
-                        src={user.profilePic as string}
-                        alt="Profile"
-                        width={32}
-                        height={32}
-                        className="object-cover"
-                        crossOrigin="anonymous"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-500">
-                        <span className="text-sm font-medium">{user ? user.name.charAt(0) : "U"}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <Button
-                  onClick={handleSignIn}
-                  className="rounded-full bg-orange-500 hover:bg-orange-600 text-white"
-                >
-                  Sign in with Coinbase
-                </Button>
-              )}
+            <div className="hidden md:flex items-center space-x-4">
+              <WalletButton />
             </div>
 
             <div className="flex md:hidden ml-4">
@@ -93,19 +61,7 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200">
             <nav className="flex flex-col space-y-4">
-              {/* Explore link removed from mobile menu as well */}
-              {/* Mobile Pricing, About, and Docs links removed */}
-              {!isAuthenticated && (
-                <Button
-                  onClick={() => {
-                    handleSignIn();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="rounded-full bg-orange-500 hover:bg-orange-600 text-white self-start"
-                >
-                  Sign in with Coinbase
-                </Button>
-              )}
+              <WalletButton />
             </nav>
           </div>
         )}
