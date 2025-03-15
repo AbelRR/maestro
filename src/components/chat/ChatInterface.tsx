@@ -6,13 +6,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Mic, Send, X, Phone, Video, RefreshCw, ChevronDown, ArrowLeft, Share, MoreVertical, Camera, VideoOff, MicOff } from "lucide-react";
 import VideoMeeting from "@/components/video/VideoMeeting";
-
-interface Message {
-  id: string;
-  content: string;
-  isUser: boolean;
-  timestamp: Date;
-}
+import { useChat, Message } from "@/hooks/useChat";
+import { chatConfig } from "@/config/chatConfig";
+import ReactMarkdown from 'react-markdown';
 
 interface SuggestedQuestion {
   id: string;
@@ -47,16 +43,25 @@ export function ChatInterface({
   onClose,
   fullScreen = true
 }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "initial",
-      content: initialMessage,
-      isUser: false,
-      timestamp: new Date(),
-    },
-  ]);
+  // Initialize the chat hook with the initial welcome message
+  const { 
+    messages, 
+    isLoading: isThinking, 
+    error: chatError, 
+    sendMessage 
+  } = useChat({
+    initialMessages: [
+      {
+        id: "initial",
+        content: initialMessage,
+        isUser: false,
+        timestamp: new Date(),
+      }
+    ],
+    expertContext: `${expertName}: ${expertTitle || ''} ${expertDescription}`
+  });
+
   const [newMessage, setNewMessage] = useState("");
-  const [isThinking, setIsThinking] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [showProfileDrawer, setShowProfileDrawer] = useState(false);
   const [callState, setCallState] = useState<CallState>("none");
@@ -77,6 +82,15 @@ export function ChatInterface({
   }, [messages, isThinking]);
 
   useEffect(() => {
+    // Show or hide suggestions based on loading state
+    if (!isThinking && messages.length > 1) {
+      setShowSuggestions(true);
+    } else if (isThinking) {
+      setShowSuggestions(false);
+    }
+  }, [isThinking, messages.length]);
+
+  useEffect(() => {
     // Handle call timer
     if (callState === "in-call") {
       const timer = setInterval(() => {
@@ -92,32 +106,8 @@ export function ChatInterface({
 
   const handleSendMessage = () => {
     if (newMessage.trim() === "") return;
-
-    // Add user message
-    const userMessage: Message = {
-      id: `user-${Date.now()}`,
-      content: newMessage,
-      isUser: true,
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
+    sendMessage(newMessage);
     setNewMessage("");
-    setIsThinking(true);
-    setShowSuggestions(false);
-
-    // Simulate AI response after a delay
-    setTimeout(() => {
-      const aiMessage: Message = {
-        id: `ai-${Date.now()}`,
-        content: "I understand what you're saying. Let me think about that for a moment... This is a simulated response for the demo. In a real application, this would be a response from an AI model.",
-        isUser: false,
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, aiMessage]);
-      setIsThinking(false);
-      setShowSuggestions(true);
-    }, 2000);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -407,7 +397,11 @@ export function ChatInterface({
 
   // Regular chat interface
   return (
-    <div className={`flex flex-col ${fullScreen ? "h-screen fixed inset-0 z-50" : "h-[600px]"} bg-white relative`}>
+    <div
+      className={`flex flex-col bg-white ${
+        fullScreen ? "fixed inset-0 z-50" : "h-full rounded-lg border shadow-sm"
+      }`}
+    >
       {/* Header with avatar in center */}
       <header className="border-b border-gray-200 py-3 px-4 flex items-center justify-between relative z-10 bg-white">
         {fullScreen && onClose ? (
@@ -477,7 +471,11 @@ export function ChatInterface({
                     : "bg-gray-200 text-gray-800"
                 }`}
               >
-                {message.content}
+                <div className="react-markdown">
+                  <ReactMarkdown>
+                    {message.content}
+                  </ReactMarkdown>
+                </div>
               </div>
             </div>
           ))}
@@ -486,6 +484,13 @@ export function ChatInterface({
               <div className="bg-gray-200 text-gray-800 py-3 px-4 rounded-lg flex items-center">
                 <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                 <span>Thinking...</span>
+              </div>
+            </div>
+          )}
+          {chatError && (
+            <div className="flex justify-center">
+              <div className="bg-red-100 text-red-700 py-2 px-4 rounded-lg text-sm">
+                {chatError}
               </div>
             </div>
           )}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ExpertCard } from "@/components/ExpertCard";
 
 interface Expert {
-  id: number;
+  id: string;
   name: string;
   title: string;
   image: string;
@@ -14,7 +14,7 @@ interface Expert {
 
 const experts: Expert[] = [
   {
-    id: 0,
+    id: "brian-armstrong",
     name: "Brian Armstrong",
     title: "CEO and Co-founder of Coinbase",
     image: "https://podcastnotes.org/wp-content/uploads/2022/09/brian-armstrong-headshot.png",
@@ -22,7 +22,7 @@ const experts: Expert[] = [
     description: "CEO and co-founder of Coinbase, the largest cryptocurrency exchange in the United States. A pioneer in the cryptocurrency space and visionary for the future of finance.",
   },
   {
-    id: 1,
+    id: "brendon-burchard",
     name: "Brendon Burchard",
     title: "High Performance Coach",
     image: "https://ext.same-assets.com/2705240281/1000014443.jpeg",
@@ -30,7 +30,7 @@ const experts: Expert[] = [
     description: "The world's leading high performance coach and one of the most-watched, quoted, and followed personal development trainers of our time.",
   },
   {
-    id: 2,
+    id: "lewis-howes",
     name: "Lewis Howes",
     title: "The School of Greatness",
     image: "https://ext.same-assets.com/2109823954/849522504.png",
@@ -38,7 +38,7 @@ const experts: Expert[] = [
     description: "Former pro athlete turned bestselling author and podcast host, focusing on business, relationships, and personal development.",
   },
   {
-    id: 3,
+    id: "joe-polish",
     name: "Joe Polish",
     title: "Marketing Guru",
     image: "https://ext.same-assets.com/912308905/4211144141.jpeg",
@@ -46,7 +46,7 @@ const experts: Expert[] = [
     description: "Founder of Genius Network, one of the highest-level marketing masterminds in the world, focusing on business growth strategies.",
   },
   {
-    id: 4,
+    id: "marie-forleo",
     name: "Marie Forleo",
     title: "Entrepreneur, Writer, and Life Coach",
     image: "https://ext.same-assets.com/1923499456/3590525356.jpeg",
@@ -54,7 +54,7 @@ const experts: Expert[] = [
     description: "Named by Oprah as a thought leader for the next generation, Marie helps entrepreneurs build businesses and lives they love.",
   },
   {
-    id: 5,
+    id: "tom-bilyeu",
     name: "Tom Bilyeu",
     title: "Co-Founder of Impact Theory",
     image: "https://ext.same-assets.com/1122016266/3530258868.jpeg",
@@ -62,7 +62,7 @@ const experts: Expert[] = [
     description: "After co-founding the billion-dollar brand Quest Nutrition, Tom now focuses on helping people develop the skills they need to improve themselves and the world.",
   },
   {
-    id: 6,
+    id: "gary-vaynerchuk",
     name: "Gary Vaynerchuk",
     title: "CEO of VaynerMedia",
     image: "https://ext.same-assets.com/1801423781/2486219231.jpeg",
@@ -70,7 +70,7 @@ const experts: Expert[] = [
     description: "Serial entrepreneur and chairman of VaynerX, a modern-day media and communications holding company, focusing on digital marketing and entrepreneurship.",
   },
   {
-    id: 7,
+    id: "mel-robbins",
     name: "Mel Robbins",
     title: "Motivational Speaker",
     image: "https://ext.same-assets.com/4132804743/1043940026.png",
@@ -78,7 +78,7 @@ const experts: Expert[] = [
     description: "Creator of the '5 Second Rule' and renowned for her practical, no-nonsense approach to personal development and overcoming anxiety.",
   },
   {
-    id: 8,
+    id: "jay-shetty",
     name: "Jay Shetty",
     title: "Former Monk, Purpose Coach",
     image: "https://ext.same-assets.com/1210758745/849522504.png",
@@ -86,7 +86,7 @@ const experts: Expert[] = [
     description: "Former monk turned award-winning host, storyteller, and purpose coach, helping people find and pursue their purpose in life.",
   },
   {
-    id: 9,
+    id: "tim-ferriss",
     name: "Tim Ferriss",
     title: "Author, Entrepreneur, Angel Investor",
     image: "https://ext.same-assets.com/1210758745/1043940026.png",

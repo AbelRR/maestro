@@ -10,7 +10,7 @@ import { hasPurchasedExpert } from "@/lib/utils";
 import { MessageSquare } from "lucide-react";
 
 interface Expert {
-  id: string | number;
+  id: string;
   name: string;
   title?: string;
   image: string;

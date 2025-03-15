@@ -18,6 +18,12 @@ import { hasPurchasedExpert } from "@/lib/utils";
 export default function ExpertPage() {
   const params = useParams();
   const expertSlug = params.expertSlug as string;
+  
+  // Log to help with debugging
+  console.log(`Looking up expert with slug: ${expertSlug}`);
+  console.log(`Available experts: ${Object.keys(expertsData).join(', ')}`);
+  
+  // Get the expert data
   const expert = expertsData[expertSlug as keyof typeof expertsData];
   const { isAuthenticated, user } = useAuth();
   const router = useRouter();
@@ -25,6 +31,7 @@ export default function ExpertPage() {
 
   // Handle case when expert is not found
   if (!expert) {
+    console.error(`Expert not found for slug: ${expertSlug}`);
     notFound();
   }
 

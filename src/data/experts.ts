@@ -1,19 +1,5 @@
 // Mock expert data - in a real app this would come from an API or database
 export const expertsData = {
-  "brian-armstrong": {
-    id: "brian-armstrong",
-    name: "Brian Armstrong",
-    title: "CEO and Co-founder of Coinbase",
-    image: "https://podcastnotes.org/wp-content/uploads/2022/09/brian-armstrong-headshot.png",
-    description: "Brian Armstrong is the CEO and co-founder of Coinbase, the largest cryptocurrency exchange in the United States. He's a pioneer in the cryptocurrency space, having founded Coinbase in 2012 to make crypto more accessible, efficient, and transparent. Brian is known for his forward-thinking leadership and vision for the future of finance.",
-    phone: "+1 (555) 123-4567",
-    suggestedQuestions: [
-      { id: "q1", text: "What's your vision for the future of cryptocurrency?" },
-      { id: "q2", text: "How do you see blockchain technology impacting traditional finance?" },
-      { id: "q3", text: "What advice do you have for entrepreneurs in the crypto space?" },
-    ],
-    initialMessage: "Hi there, I'm Brian Armstrong. Happy to discuss cryptocurrency, blockchain, and entrepreneurship. What would you like to know?"
-  },
   "joe-polish": {
     id: "joe-polish",
     name: "Joe Polish",
@@ -139,5 +125,19 @@ export const expertsData = {
       { id: "q3", text: "What are the most common patterns you see among high performers?" },
     ],
     initialMessage: "Hey, Tim Ferriss here. I'm all about testing and optimizing to find what works. What specific challenge are you working through that we can deconstruct together?"
+  },
+  "brian-armstrong": {
+    id: "brian-armstrong",
+    name: "Brian Armstrong",
+    title: "CEO and Co-founder of Coinbase",
+    image: "https://podcastnotes.org/wp-content/uploads/2022/09/brian-armstrong-headshot.png",
+    description: "Brian Armstrong is the CEO and co-founder of Coinbase, the largest cryptocurrency exchange in the United States. A pioneer in the cryptocurrency space and visionary for the future of finance.",
+    phone: "+1 (555) 123-4567",
+    suggestedQuestions: [
+      { id: "q1", text: "What's your vision for the future of cryptocurrency?" },
+      { id: "q2", text: "How do you see blockchain technology evolving in the next 5 years?" },
+      { id: "q3", text: "What advice would you give to someone starting in the crypto space today?" },
+    ],
+    initialMessage: "Hi there, I'm Brian Armstrong. As the CEO of Coinbase, I'm passionate about creating an open financial system for the world. What would you like to discuss about crypto, blockchain, or building companies?"
   }
 };
