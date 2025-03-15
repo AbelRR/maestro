@@ -10,15 +10,18 @@ import { Footer } from "@/components/Footer";
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { Sidebar } from "@/components/chat/Sidebar";
 import { useAuth } from "@/context/AuthContext";
+import { ExpertPurchase } from "@/components/ExpertPurchase";
 import { Menu, MessageSquare, Phone, X } from "lucide-react";
 import { expertsData } from "@/data/experts";
+import { hasPurchasedExpert } from "@/lib/utils";
 
 export default function ExpertPage() {
   const params = useParams();
   const expertSlug = params.expertSlug as string;
   const expert = expertsData[expertSlug as keyof typeof expertsData];
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
+  const [hasPurchased, setHasPurchased] = useState(false);
 
   // Handle case when expert is not found
   if (!expert) {
@@ -29,12 +32,22 @@ export default function ExpertPage() {
     // Redirect to login if not authenticated
     if (!isAuthenticated) {
       router.push(`/login?next=/${expertSlug}`);
+    } else if (user?.address) {
+      // Check if user has purchased this expert
+      setHasPurchased(hasPurchasedExpert(user.address, expertSlug));
     }
-  }, [isAuthenticated, router, expertSlug]);
+  }, [isAuthenticated, router, expertSlug, user?.address]);
 
   const [activeTab, setActiveTab] = useState<"text" | "voice">("text");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isFullChat, setIsFullChat] = useState(false);
+  const [isFullChat, setIsFullChat] = useState(true); // Default to full chat view
+
+  // Handle purchase completion
+  const handlePurchaseComplete = () => {
+    if (user?.address) {
+      setHasPurchased(true);
+    }
+  };
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
@@ -64,8 +77,8 @@ export default function ExpertPage() {
     );
   }
 
-  // If we're in full chat mode, only show the chat interface
-  if (isFullChat) {
+  // If user has purchased and we're in full chat mode, show only the chat interface
+  if (hasPurchased && isFullChat) {
     return (
       <ChatInterface
         expertName={expert.name}
@@ -92,9 +105,8 @@ export default function ExpertPage() {
         )}
 
         <div className="flex flex-col flex-1">
-          {/* Expert info section - Now this will be hidden in the chat design 
-             and only shown when avatar is clicked in the ChatInterface component */}
-          <div className="bg-white border-b hidden">
+          {/* Expert info section */}
+          <div className="bg-white border-b">
             <div className="container py-8">
               <div className="flex flex-col items-center max-w-3xl mx-auto text-center">
                 {isAuthenticated && (
@@ -120,28 +132,28 @@ export default function ExpertPage() {
                   <p className="text-gray-600 mb-4">{expert.title}</p>
                 )}
 
-                <div className="flex gap-3 mb-6">
-                  <Button
-                    className="rounded-full bg-orange-500 hover:bg-orange-600 text-white px-6 flex items-center gap-2"
-                    onClick={() => {
-                      setActiveTab("text");
-                      setIsFullChat(true);
-                    }}
-                  >
-                    <MessageSquare className="h-4 w-4" />
-                    <span>Text</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="rounded-full border-orange-500 text-orange-500 hover:bg-orange-50 px-6 flex items-center gap-2"
-                    onClick={() => {
-                      setActiveTab("voice");
-                      setIsFullChat(true);
-                    }}
-                  >
-                    <Phone className="h-4 w-4" />
-                    <span>Voice</span>
-                  </Button>
+                <div className="flex gap-3 mb-6 w-full max-w-xs mx-auto">
+                  {hasPurchased ? (
+                    <Button
+                      className="w-full rounded-full bg-orange-500 hover:bg-orange-600 text-white px-6 flex items-center gap-2 justify-center"
+                      onClick={() => {
+                        setActiveTab("text");
+                        setIsFullChat(true);
+                      }}
+                    >
+                      <MessageSquare className="h-4 w-4" />
+                      <span>Start Chat</span>
+                    </Button>
+                  ) : (
+                    <ExpertPurchase
+                      expertSlug={expertSlug}
+                      expertId={expertSlug}
+                      expertName={expert.name}
+                      expertImage={expert.image}
+                      onPurchaseComplete={handlePurchaseComplete}
+                      buttonStyle="chat-button"
+                    />
+                  )}
                 </div>
 
                 <div className="text-left w-full">
@@ -156,18 +168,20 @@ export default function ExpertPage() {
             </div>
           </div>
 
-          {/* Chat interface - Takes up full height since the expert info is hidden */}
-          <div className="flex-1 bg-gray-100">
-            <ChatInterface
-              expertName={expert.name}
-              expertImage={expert.image}
-              expertTitle={expert.title}
-              expertDescription={expert.description}
-              initialMessage={expert.initialMessage || undefined}
-              suggestedQuestions={expert.suggestedQuestions}
-              fullScreen={true}
-            />
-          </div>
+          {/* Only show chat interface if purchased and not in full screen mode */}
+          {hasPurchased && !isFullChat && (
+            <div className="flex-1 bg-gray-100">
+              <ChatInterface
+                expertName={expert.name}
+                expertImage={expert.image}
+                expertTitle={expert.title}
+                expertDescription={expert.description}
+                initialMessage={expert.initialMessage || undefined}
+                suggestedQuestions={expert.suggestedQuestions}
+                fullScreen={false}
+              />
+            </div>
+          )}
         </div>
       </main>
       {!isAuthenticated && <Footer />}

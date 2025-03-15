@@ -1,6 +1,7 @@
 // Mock expert data - in a real app this would come from an API or database
 export const expertsData = {
   "joe-polish": {
+    id: "joe-polish",
     name: "Joe Polish",
     title: "Marketing Guru, President of Piranha Marketing and Founder of Genius Network",
     image: "https://ext.same-assets.com/912308905/4211144141.jpeg",
@@ -14,6 +15,7 @@ export const expertsData = {
     initialMessage: "Hey it's Joe Polish. What's on your mind today?"
   },
   "brendon-burchard": {
+    id: "brendon-burchard",
     name: "Brendon Burchard",
     title: "3-time NYT bestselling author",
     image: "https://ext.same-assets.com/2705240281/1000014443.jpeg",
@@ -27,6 +29,7 @@ export const expertsData = {
     initialMessage: "Hey striver! Welcome to GrowthDay. This is Brendon AI. What did you get done this week? What went well? Did you achieve your goals, or are you struggling with something? Just start sharing with me and we'll grow, together. Talk to me now I'm here for you."
   },
   "lewis-howes": {
+    id: "lewis-howes",
     name: "Lewis Howes",
     title: "Your Personal 24/7 Greatness Coach",
     image: "https://ext.same-assets.com/2109823954/849522504.png",
@@ -40,6 +43,7 @@ export const expertsData = {
     initialMessage: "Hey it's Lewis. What's on your mind today?"
   },
   "marie-forleo": {
+    id: "marie-forleo",
     name: "Marie Forleo",
     title: "Entrepreneur, Writer, and Life Coach",
     image: "https://ext.same-assets.com/1923499456/3590525356.jpeg",
@@ -53,6 +57,7 @@ export const expertsData = {
     initialMessage: "Hey there! It's Marie. I'm so excited to chat with you. What's something you're working on or struggling with that I might be able to help with today?"
   },
   "tom-bilyeu": {
+    id: "tom-bilyeu",
     name: "Tom Bilyeu",
     title: "Co-Founder of Impact Theory",
     image: "https://ext.same-assets.com/1122016266/3530258868.jpeg",
@@ -66,6 +71,7 @@ export const expertsData = {
     initialMessage: "Hey, Tom Bilyeu here. I'm passionate about helping people develop the skills they need to improve themselves. What mindset challenge are you facing right now?"
   },
   "gary-vaynerchuk": {
+    id: "gary-vaynerchuk",
     name: "Gary Vaynerchuk",
     title: "CEO of VaynerMedia, Entrepreneur & Content Creator",
     image: "https://ext.same-assets.com/1801423781/2486219231.jpeg",
@@ -79,6 +85,7 @@ export const expertsData = {
     initialMessage: "What's up! Gary Vee here. No fluff, just straight talk. What can I help you with today?"
   },
   "mel-robbins": {
+    id: "mel-robbins",
     name: "Mel Robbins",
     title: "Motivational Speaker & Author of The 5 Second Rule",
     image: "https://ext.same-assets.com/4132804743/1043940026.png",
@@ -92,6 +99,7 @@ export const expertsData = {
     initialMessage: "Hi there. It's Mel Robbins. I'm here to help you push through uncertainty and self-doubt. What's something you've been hesitating on that I can help with today?"
   },
   "jay-shetty": {
+    id: "jay-shetty",
     name: "Jay Shetty",
     title: "Former Monk, Purpose Coach & Host of On Purpose",
     image: "https://ext.same-assets.com/1210758745/849522504.png",
@@ -105,6 +113,7 @@ export const expertsData = {
     initialMessage: "Hey, it's Jay. I believe we all have a purpose waiting to be discovered. What's on your heart and mind today?"
   },
   "tim-ferriss": {
+    id: "tim-ferriss",
     name: "Tim Ferriss",
     title: "Author, Entrepreneur, Angel Investor",
     image: "https://ext.same-assets.com/1210758745/1043940026.png",

@@ -44,7 +44,7 @@ export function ChatInterface({
     { id: "q3", text: "Does high performance correlate with personality or is it more tied to desires for growth, achievement, and contribution?" },
   ],
   onClose,
-  fullScreen = false
+  fullScreen = true
 }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -590,18 +590,27 @@ export function ChatInterface({
 
   // Regular chat interface
   return (
-    <div className={`flex flex-col ${fullScreen ? "h-screen" : "h-[600px]"} bg-white relative`}>
+    <div className={`flex flex-col ${fullScreen ? "h-screen fixed inset-0 z-50" : "h-[600px]"} bg-white relative`}>
       {/* Header with avatar in center */}
       <header className="border-b border-gray-200 py-3 px-4 flex items-center justify-between relative z-10 bg-white">
-        <Link href="/" className="flex items-center text-gray-700">
-          <div className="relative h-6 w-6 rounded">
-            <div className="absolute inset-0 bg-black rounded-md flex items-center justify-center">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 6H20M4 12H20M4 18H20" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
+        {fullScreen && onClose ? (
+          <button 
+            onClick={onClose}
+            className="flex items-center text-gray-700"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+        ) : (
+          <Link href="/" className="flex items-center text-gray-700">
+            <div className="relative h-6 w-6 rounded">
+              <div className="absolute inset-0 bg-black rounded-md flex items-center justify-center">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 6H20M4 12H20M4 18H20" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
+        )}
         
         <div 
           className="absolute left-1/2 transform -translate-x-1/2 flex items-center cursor-pointer"

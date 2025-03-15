@@ -5,30 +5,35 @@ import { Button } from '@/components/ui/button';
 import { useWallet } from '@/context/WalletContext';
 import { AccessPurchaseDetails } from '@/config/payment';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Loader2, Wallet } from 'lucide-react';
+import { Loader2, Wallet, MessageSquare } from 'lucide-react';
+import { savePurchase } from '@/lib/utils';
 
 interface ExpertPurchaseProps {
   expertSlug: string;
   expertId: string;
   expertName: string;
   expertImage: string;
-  price: number;
-  currency?: string;
+  onPurchaseComplete?: () => void;
+  buttonStyle?: 'price-pill' | 'chat-button';
 }
 
 export function ExpertPurchase({ 
   expertSlug, 
   expertId, 
   expertName, 
-  expertImage, 
-  price, 
-  currency = 'USD'
+  expertImage,
+  onPurchaseComplete,
+  buttonStyle = 'price-pill'
 }: ExpertPurchaseProps) {
   const { isConnected, address, connect } = useWallet();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [purchaseComplete, setPurchaseComplete] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Fixed price of $10
+  const price = 10;
+  const currency = 'USD';
 
   const handleOpenPurchaseModal = () => {
     setShowPurchaseModal(true);
@@ -70,10 +75,17 @@ export function ExpertPurchase({
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
+      // Save purchase to localStorage - use expertSlug for consistent ID
+      savePurchase(address, expertSlug);
+      
       // Simulate successful purchase
       setPurchaseComplete(true);
       
-      // In a real implementation, we would redirect to the expert page or update permissions
+      // Notify parent component if callback provided
+      if (onPurchaseComplete) {
+        onPurchaseComplete();
+      }
+      
       console.log('Purchase complete!');
     } catch (err) {
       console.error('Purchase error:', err);
@@ -85,12 +97,22 @@ export function ExpertPurchase({
 
   return (
     <>
-      <div 
-        onClick={handleOpenPurchaseModal}
-        className="absolute top-2 right-2 bg-orange-500 text-white rounded-full py-1 px-3 font-medium text-sm cursor-pointer hover:bg-orange-600 transition-colors"
-      >
-        ${price}
-      </div>
+      {buttonStyle === 'price-pill' ? (
+        <div 
+          onClick={handleOpenPurchaseModal}
+          className="absolute top-2 right-2 bg-orange-500 text-white rounded-full py-1 px-3 font-medium text-sm cursor-pointer hover:bg-orange-600 transition-colors"
+        >
+          ${price}
+        </div>
+      ) : (
+        <Button
+          onClick={handleOpenPurchaseModal}
+          className="w-full rounded-full bg-orange-500 hover:bg-orange-600 text-white px-6 flex items-center gap-2 justify-center"
+        >
+          <MessageSquare className="h-4 w-4" />
+          <span>Purchase Access (${price})</span>
+        </Button>
+      )}
 
       <Dialog open={showPurchaseModal} onOpenChange={handleClosePurchaseModal}>
         <DialogContent className="sm:max-w-[425px]">

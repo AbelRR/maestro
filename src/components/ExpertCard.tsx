@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ExpertPurchase } from "@/components/ExpertPurchase";
+import { useAuth } from "@/context/AuthContext";
+import { hasPurchasedExpert } from "@/lib/utils";
+import { MessageSquare } from "lucide-react";
 
 interface Expert {
   id: string | number;
@@ -22,25 +25,17 @@ interface ExpertCardProps {
 
 export function ExpertCard({ expert, showPurchase = true }: ExpertCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const { user, isAuthenticated } = useAuth();
+  const [hasPurchased, setHasPurchased] = useState(false);
   
-  // Generate a price between $20 and $250
-  const getExpertPrice = (expertId: string | number): number => {
-    // Use the expert ID to create a deterministic price
-    // This ensures the same expert always has the same price
-    const idString = String(expertId);
-    let hashValue = 0;
-    for (let i = 0; i < idString.length; i++) {
-      hashValue += idString.charCodeAt(i);
-    }
-    
-    // Map the hash to a range between 20 and 250
-    const price = 20 + (hashValue % 230);
-    // Round to nearest $5
-    return Math.round(price / 5) * 5;
-  };
-  
-  const price = getExpertPrice(expert.id);
   const expertSlug = expert.link.startsWith('/') ? expert.link.substring(1) : expert.link;
+  
+  // Check if the user has purchased this expert
+  useEffect(() => {
+    if (isAuthenticated && user?.address) {
+      setHasPurchased(hasPurchasedExpert(user.address, expertSlug));
+    }
+  }, [isAuthenticated, user, expertSlug]);
 
   return (
     <div className="relative rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
@@ -58,23 +53,46 @@ export function ExpertCard({ expert, showPurchase = true }: ExpertCardProps) {
         />
         {isHovered && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <Link href={expert.link}>
-              <Button className="rounded-full bg-orange-500 hover:bg-orange-600 text-white px-8">
-                Chat
-              </Button>
-            </Link>
+            {hasPurchased ? (
+              <Link href={expert.link}>
+                <Button className="rounded-full bg-orange-500 hover:bg-orange-600 text-white px-8 flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  <span>Chat Now</span>
+                </Button>
+              </Link>
+            ) : (
+              <div onClick={(e) => {
+                e.preventDefault();
+                document.querySelector(`[data-expert-id="${expert.id}"]`)?.dispatchEvent(
+                  new MouseEvent('click', { bubbles: true })
+                );
+              }}>
+                <Button className="rounded-full bg-orange-500 hover:bg-orange-600 text-white px-8">
+                  Purchase for $10
+                </Button>
+              </div>
+            )}
           </div>
         )}
         
-        {/* Price pill */}
-        {showPurchase && (
-          <ExpertPurchase
-            expertSlug={expertSlug}
-            expertId={String(expert.id)}
-            expertName={expert.name}
-            expertImage={expert.image}
-            price={price}
-          />
+        {/* Show price pill only if not purchased and showPurchase is true */}
+        {showPurchase && !hasPurchased && (
+          <div data-expert-id={expert.id}>
+            <ExpertPurchase
+              expertSlug={expertSlug}
+              expertId={String(expert.id)}
+              expertName={expert.name}
+              expertImage={expert.image}
+              onPurchaseComplete={() => setHasPurchased(true)}
+            />
+          </div>
+        )}
+        
+        {/* Show "Purchased" indicator if already purchased */}
+        {showPurchase && hasPurchased && (
+          <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full py-1 px-3 font-medium text-sm cursor-pointer">
+            Purchased
+          </div>
         )}
       </div>
       <div className="p-4 bg-white">

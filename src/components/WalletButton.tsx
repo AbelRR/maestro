@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Wallet, LogOut } from 'lucide-react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { useEffect } from 'react';
-import { injected } from 'wagmi/connectors';
 
 export function WalletButton() {
   const { logout, login } = useAuth();
@@ -14,13 +12,19 @@ export function WalletButton() {
   const { connect, isPending: isConnecting, connectors } = useConnect();
   const { disconnect } = useDisconnect();
   const [showDropdown, setShowDropdown] = useState(false);
+  
+  // Use a ref to track if we've already logged in this connection session
+  const [hasLoggedIn, setHasLoggedIn] = useState(false);
 
-  // Handle wallet connection/disconnection
+  // Handle wallet connection/disconnection with proper conditions
   useEffect(() => {
-    if (isConnected && address) {
+    if (isConnected && address && !hasLoggedIn) {
+      setHasLoggedIn(true);
       login(address);
+    } else if (!isConnected && hasLoggedIn) {
+      setHasLoggedIn(false);
     }
-  }, [isConnected, address, login]);
+  }, [isConnected, address, login, hasLoggedIn]);
 
   const handleConnectWallet = async () => {
     try {

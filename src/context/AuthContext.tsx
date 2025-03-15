@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import { useAccount } from "wagmi";
 
 type UserType = {
@@ -41,28 +41,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  // Auto-login when wallet is connected
-  useEffect(() => {
-    if (isConnected && address) {
-      login(address);
-    } else if (!isConnected) {
-      logout();
-    }
-  }, [isConnected, address]);
-
-  const login = (address: string) => {
+  // Memoized login function to prevent recreation on each render
+  const login = useCallback((address: string) => {
+    // Check if we already have this user logged in to prevent unnecessary updates
+    if (user?.address === address) return;
+    
     const userData = {
       address,
       name: `User_${address.substring(2, 6)}`,
     };
     setUser(userData);
     localStorage.setItem("delphi-user", JSON.stringify(userData));
-  };
+  }, [user]);
 
-  const logout = () => {
+  // Memoized logout function
+  const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem("delphi-user");
-  };
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -84,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
