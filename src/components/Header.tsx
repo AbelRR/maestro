@@ -29,7 +29,7 @@ export function Header() {
                     </svg>
                   </div>
                 </div>
-                <span className="ml-2 text-xl font-semibold">Delphi</span>
+                <span className="ml-2 text-xl font-semibold">Maestro</span>
               </div>
             </Link>
             <nav className="hidden md:flex ml-8 space-x-8">

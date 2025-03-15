@@ -236,7 +236,7 @@ export default function PricingPage() {
                 </div>
 
                 <div className="bg-gray-100 rounded-lg p-8">
-                  <h3 className="text-xl font-semibold mb-4">Delphi For Business</h3>
+                  <h3 className="text-xl font-semibold mb-4">Maestro For Business</h3>
                   <p className="text-gray-600 mb-6">Scale high-touch engagement and multiply executive impact</p>
 
                   <Button className="bg-gray-700 text-white hover:bg-gray-800">
@@ -355,7 +355,7 @@ export default function PricingPage() {
                   <div className="w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                     <Check className="w-3.5 h-3.5 text-orange-500" />
                   </div>
-                  <p className="text-gray-300">Your Delphi clone manages replies 24/7, keeping inboxes clear and contacts engaged</p>
+                  <p className="text-gray-300">Your Maestro clone manages replies 24/7, keeping inboxes clear and contacts engaged</p>
                 </div>
 
                 <div className="flex items-start gap-3">

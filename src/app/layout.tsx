@@ -6,7 +6,7 @@ import ClientBody from "@/app/ClientBody"; // Fixed to use default import
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Delphi - Explore",
+  title: "Maestro - Explore",
   description: "Explore conversations with experts and thought leaders.",
   icons: {
     icon: "/favicon.svg",

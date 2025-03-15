@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 export function getUserPurchases(userAddress: string): string[] {
   if (typeof window === 'undefined') return [];
   try {
-    const purchasesJson = localStorage.getItem(`delphi-purchases-${userAddress}`);
+    const purchasesJson = localStorage.getItem(`Maestro-purchases-${userAddress}`);
     return purchasesJson ? JSON.parse(purchasesJson) : [];
   } catch (error) {
     console.error('Error loading purchases:', error);
@@ -23,7 +23,7 @@ export function savePurchase(userAddress: string, expertId: string): void {
     const purchases = getUserPurchases(userAddress);
     if (!purchases.includes(expertId)) {
       purchases.push(expertId);
-      localStorage.setItem(`delphi-purchases-${userAddress}`, JSON.stringify(purchases));
+      localStorage.setItem(`Maestro-purchases-${userAddress}`, JSON.stringify(purchases));
     }
   } catch (error) {
     console.error('Error saving purchase:', error);

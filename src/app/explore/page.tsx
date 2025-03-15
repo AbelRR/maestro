@@ -187,7 +187,7 @@ export default function ExplorePage() {
 
         {/* Main content */}
         <div className="container py-12">
-          <h2 className="text-2xl font-bold mb-6">Explore Delphi</h2>
+          <h2 className="text-2xl font-bold mb-6">Explore Maestro</h2>
 
           {/* Categories */}
           <div className="flex flex-wrap gap-2 mb-8 overflow-x-auto pb-2">

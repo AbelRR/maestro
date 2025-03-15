@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Mic, Send, X, Phone, Video, RefreshCw, ChevronDown, ArrowLeft, Share, MoreVertical, Camera, VideoOff, MicOff } from "lucide-react";
+import VideoMeeting from "@/components/video/VideoMeeting";
 
 interface Message {
   id: string;
@@ -64,6 +65,7 @@ export function ChatInterface({
   const [callTimer, setCallTimer] = useState<NodeJS.Timeout | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
+  const [roomName, setRoomName] = useState<string>("");
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -139,6 +141,10 @@ export function ChatInterface({
   const initiateCall = (type: CallType = "audio") => {
     setCallType(type);
     setCallState("pre-call");
+    
+    // Generate a unique room name based on expert and user
+    const timestamp = Date.now();
+    setRoomName(`${expertName.replace(/\s+/g, '-').toLowerCase()}-call-${timestamp}`);
   };
 
   const startCall = () => {
@@ -229,214 +235,25 @@ export function ChatInterface({
     );
   }
 
-  // Render active audio call interface
+  // Replace the in-call audio interface with LiveKit
   if (callState === "in-call" && callType === "audio") {
-    const minutes = Math.floor(callDuration / 60);
-    const seconds = callDuration % 60;
-    const formattedTime = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
     return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white text-gray-900">
-        <header className="fixed top-0 w-full border-b border-gray-200 py-3 px-4 flex items-center justify-between z-10 bg-white">
-          <Link href="/" className="flex items-center text-gray-700">
-            <div className="relative h-6 w-6 rounded">
-              <div className="absolute inset-0 bg-black rounded-md flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 6H20M4 12H20M4 18H20" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </div>
-            </div>
-          </Link>
-          
-          <div className="flex items-center gap-1">
-            <div className="w-7 h-7 rounded-full overflow-hidden border border-gray-200">
-              <Image
-                src={expertImage}
-                alt={expertName}
-                width={28}
-                height={28}
-                className="object-cover w-full h-full"
-                crossOrigin="anonymous"
-              />
-            </div>
-            <span className="font-medium text-center ml-1">{expertName}</span>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <div className="flex items-center border border-gray-200 rounded-full px-3 py-1 text-sm">
-              <Phone className="h-3.5 w-3.5 mr-1.5 text-gray-700" />
-              <span className="text-gray-700">{formattedTime}</span>
-            </div>
-            <div className="text-gray-700 text-sm">
-              <span>99 minutes left</span>
-            </div>
-          </div>
-        </header>
-
-        <div className="w-full max-w-sm mx-auto px-4 flex flex-col items-center justify-center flex-1">
-          <div className="relative w-40 h-40 mb-6 rounded-full overflow-hidden border-4 border-white shadow-lg">
-            <Image
-              src={expertImage}
-              alt={expertName}
-              fill
-              className="object-cover w-full h-full"
-              crossOrigin="anonymous"
-            />
-          </div>
-          <h1 className="text-2xl font-bold mb-2">{expertName}</h1>
-          
-          <div className="bg-orange-100 text-orange-800 py-1 px-3 rounded-full text-sm font-medium mb-20">
-            Talking
-          </div>
-
-          <div className="flex justify-center w-full gap-4">
-            <button 
-              onClick={toggleMute}
-              className={`w-16 h-16 ${isMuted ? "bg-red-100" : "bg-gray-100"} rounded-full flex items-center justify-center`}
-            >
-              {isMuted ? (
-                <MicOff className="h-6 w-6 text-red-500" />
-              ) : (
-                <Mic className="h-6 w-6 text-gray-700" />
-              )}
-            </button>
-            <button 
-              onClick={endCall}
-              className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center"
-            >
-              <Phone className="h-6 w-6 text-white transform rotate-135" />
-            </button>
-          </div>
-        </div>
-      </div>
+      <VideoMeeting 
+        roomName={roomName}
+        userName="User" 
+        onClose={endCall}
+      />
     );
   }
 
-  // Render active video call interface
+  // Replace the in-call video interface with LiveKit
   if (callState === "in-call" && callType === "video") {
-    const minutes = Math.floor(callDuration / 60);
-    const seconds = callDuration % 60;
-    const formattedTime = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    
     return (
-      <div className="fixed inset-0 z-50 flex flex-col bg-black text-white">
-        {/* Video call header */}
-        <header className="w-full py-3 px-4 flex items-center justify-between z-10">
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center">
-              <div className="text-orange-500 font-bold">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </div>
-            </Link>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full overflow-hidden border border-gray-700">
-              <Image
-                src={expertImage}
-                alt={expertName}
-                width={28}
-                height={28}
-                className="object-cover w-full h-full"
-                crossOrigin="anonymous"
-              />
-            </div>
-            <span className="font-medium text-center">{expertName}</span>
-            <div className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-sm ml-1">
-              LIVE
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <div className="flex items-center border border-gray-700 rounded-full px-3 py-1 text-sm">
-              <Camera className="h-3.5 w-3.5 mr-1.5" />
-              <span>{formattedTime}</span>
-            </div>
-            <div className="text-white text-sm">
-              <span>19 minutes left</span>
-            </div>
-          </div>
-        </header>
-
-        {/* Main video area */}
-        <div className="flex-1 relative">
-          {/* Expert video (full screen) */}
-          <div className="absolute inset-0 bg-gradient-to-b from-neutral-800 to-black flex items-center justify-center">
-            {!isVideoOff ? (
-              <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                <Image
-                  src={expertImage}
-                  alt={expertName}
-                  fill
-                  className="object-cover w-full h-full"
-                  crossOrigin="anonymous"
-                />
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center">
-                <div className="relative w-40 h-40 mb-4 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                  <Image
-                    src={expertImage}
-                    alt={expertName}
-                    fill
-                    className="object-cover w-full h-full"
-                    crossOrigin="anonymous"
-                  />
-                </div>
-                <h1 className="text-2xl font-bold mb-2">{expertName}</h1>
-                <div className="text-white text-sm bg-gray-800 px-3 py-1 rounded-full">
-                  Camera Off
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Self view (picture-in-picture) */}
-          <div className="absolute left-4 bottom-24 w-[150px] h-[100px] rounded-lg overflow-hidden border-2 border-gray-600 bg-gray-800 shadow-lg">
-            {/* This would be the user's camera feed - using a placeholder for now */}
-            <div className="absolute inset-0 bg-gray-700 flex items-center justify-center">
-              <span className="text-gray-300 text-xs">Your camera</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Video call controls */}
-        <div className="p-4 flex justify-center space-x-4">
-          <button 
-            onClick={toggleMute}
-            className={`w-14 h-14 ${isMuted ? "bg-red-500" : "bg-gray-700"} rounded-full flex items-center justify-center`}
-          >
-            {isMuted ? (
-              <MicOff className="h-6 w-6 text-white" />
-            ) : (
-              <Mic className="h-6 w-6 text-white" />
-            )}
-          </button>
-          <button 
-            onClick={toggleVideo}
-            className={`w-14 h-14 ${isVideoOff ? "bg-red-500" : "bg-gray-700"} rounded-full flex items-center justify-center`}
-          >
-            {isVideoOff ? (
-              <VideoOff className="h-6 w-6 text-white" />
-            ) : (
-              <Video className="h-6 w-6 text-white" />
-            )}
-          </button>
-          <button 
-            onClick={endCall}
-            className="w-14 h-14 bg-red-500 rounded-full flex items-center justify-center"
-          >
-            <Phone className="h-6 w-6 text-white transform rotate-135" />
-          </button>
-          <button 
-            className="w-14 h-14 bg-gray-700 rounded-full flex items-center justify-center"
-          >
-            <MoreVertical className="h-6 w-6 text-white" />
-          </button>
-        </div>
-      </div>
+      <VideoMeeting 
+        roomName={roomName}
+        userName="User" 
+        onClose={endCall}
+      />
     );
   }
 

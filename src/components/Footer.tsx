@@ -10,10 +10,10 @@ export function Footer() {
               <rect width="32" height="32" rx="6" fill="#000000" stroke="#FFFFFF" strokeWidth="2"/>
               <path d="M10 8H22M10 16H22M10 24H22" stroke="#FF6B00" strokeWidth="2.5" strokeLinecap="round"/>
             </svg>
-            <span className="text-xl font-semibold">Delphi</span>
+            <span className="text-xl font-semibold">Maestro</span>
           </div>
           <p className="text-gray-400 text-sm mb-4">Your path to digital immortality & infinite scalability.</p>
-          <p className="text-gray-500 text-xs">© 2024 Delphi AI, Inc.</p>
+          <p className="text-gray-500 text-xs">© 2024 Maestro AI, Inc.</p>
         </div>
       </div>
     </footer>

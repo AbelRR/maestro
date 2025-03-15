@@ -14,6 +14,14 @@ interface Expert {
 
 const experts: Expert[] = [
   {
+    id: 0,
+    name: "Brian Armstrong",
+    title: "CEO and Co-founder of Coinbase",
+    image: "https://podcastnotes.org/wp-content/uploads/2022/09/brian-armstrong-headshot.png",
+    link: "/brian-armstrong",
+    description: "CEO and co-founder of Coinbase, the largest cryptocurrency exchange in the United States. A pioneer in the cryptocurrency space and visionary for the future of finance.",
+  },
+  {
     id: 1,
     name: "Brendon Burchard",
     title: "High Performance Coach",
@@ -88,7 +96,8 @@ const experts: Expert[] = [
 ];
 
 const displayExperts: Expert[] = [
-  ...experts.slice(0, 3),
+  experts[0],
+  ...experts.slice(1, 3),
   ...experts.slice(3, 6),
 ];
 

@@ -44,7 +44,7 @@ export function Sidebar({
             <rect width="32" height="32" rx="6" fill="#000000"/>
             <path d="M10 8H22M10 16H22M10 24H22" stroke="#FF6B00" strokeWidth="2.5" strokeLinecap="round"/>
           </svg>
-          <span className="font-semibold">Delphi</span>
+          <span className="font-semibold">Maestro</span>
         </div>
         <button
           onClick={onClose}

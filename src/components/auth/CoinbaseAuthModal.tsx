@@ -20,7 +20,7 @@ const QRCode = () => (
         </svg>
       </div>
       <div className="bg-white text-black p-2 z-10 text-sm font-medium border border-gray-200 rounded shadow-sm">
-        DELPHI
+        Maestro
       </div>
     </div>
   </div>

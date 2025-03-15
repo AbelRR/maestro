@@ -18,7 +18,7 @@ const wagmiConfig = createConfig({
   chains: [base],
   connectors: [
     coinbaseWallet({
-      appName: "Delphi AI",
+      appName: "Maestro AI",
     }),
     injected(),
   ],
@@ -40,7 +40,7 @@ export default function ClientBody({ children }: ClientBodyProps) {
           chain={base}
           config={{
             appearance: {
-              name: "Delphi AI",
+              name: "Maestro AI",
               logo: "/favicon.svg",
               mode: "auto",
               theme: "default",

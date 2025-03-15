@@ -57,7 +57,7 @@
     @apply bg-background text-foreground;
   }
 
-  /* Custom styles for Delphi site */
+  /* Custom styles for Maestro site */
   .container {
     @apply px-4 mx-auto max-w-7xl;
   }
@@ -74,7 +74,7 @@
   }
 }
 
-/* Override carousel styles for better match with Delphi */
+/* Override carousel styles for better match with Maestro */
 .carousel {
   @apply overflow-hidden relative;
 }

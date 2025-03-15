@@ -29,13 +29,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check for user in localStorage
-    const storedUser = localStorage.getItem("delphi-user");
+    const storedUser = localStorage.getItem("Maestro-user");
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
       } catch (error) {
         console.error("Error parsing user data:", error);
-        localStorage.removeItem("delphi-user");
+        localStorage.removeItem("Maestro-user");
       }
     }
     setIsLoading(false);
@@ -51,13 +51,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       name: `User_${address.substring(2, 6)}`,
     };
     setUser(userData);
-    localStorage.setItem("delphi-user", JSON.stringify(userData));
+    localStorage.setItem("Maestro-user", JSON.stringify(userData));
   }, [user]);
 
   // Memoized logout function
   const logout = useCallback(() => {
     setUser(null);
-    localStorage.removeItem("delphi-user");
+    localStorage.removeItem("Maestro-user");
   }, []);
 
   return (
