@@ -2,27 +2,14 @@
 
 [![Demo Video](https://img.youtube.com/vi/3RsRztrCQfQ/0.jpg)](https://youtu.be/3RsRztrCQfQ)
 
-*Watch our demo: [https://youtu.be/3RsRztrCQfQ](https://youtu.be/h1Y_j277T78)*
+*Watch our demo: [https://youtu.be/3RsRztrCQfQ](https://youtu.be/3RsRztrCQfQ)*
 ![2025-03-15 14 26 34](https://github.com/user-attachments/assets/7d53df84-bb25-4b20-98c4-40e827af99e9)
-
-
-## Problem Statement and Solution Approach
-
-In today's remote work environment, team collaboration often suffers from fragmented tools and disconnected workflows. Video calls lack context, document sharing is cumbersome, and productivity tools don't integrate well with real-time communication.
-
-Maestro solves this by providing a unified platform that combines:
-- LiveKit-powered HD video conferencing
-- AI-assisted meeting insights and action items
-- Real-time collaborative document editing
-- Intelligent meeting summarization and transcription
 
 The platform is built on Next.js for optimal performance and uses LiveKit's WebRTC infrastructure for reliable, low-latency video communication.
 
 ## Quick Links
 
-📹 **Video Demo**: [https://youtu.be/h1Y_j277T78](https://youtu.be/h1Y_j277T78)  
-🔗 **GitHub Repository**: https://github.com/yourusername/Maestro-clone  
-🌐 **Live Demo**: https://Maestro-demo.vercel.app  
+📹 **Video Demo**: [https://youtu.be/3RsRztrCQfQ](https://youtu.be/3RsRztrCQfQ)  
 
 ## Detailed Project Description
 
@@ -95,7 +82,7 @@ Maestro is built with a modern tech stack designed for performance and scalabili
 - **Next.js API Routes**: For serverless functions
 - **LiveKit SDK**: For WebRTC signaling and media server communication
 - **OpenAI API**: For AI-powered meeting insights
-- **Firebase**: For authentication and real-time data storage
+- **Coinbase CDP**: For authentication and real-time data storage
 
 ### Infrastructure
 - **Vercel**: For hosting and serverless functions
@@ -124,48 +111,6 @@ Maestro's performance is rigorously measured across several dimensions:
 - **Concurrent User Capacity**: Tested with 100 simultaneous rooms
 - **API Response Time**: 95th percentile < 200ms
 - **Error Rate**: < 0.1% across all operations
-
-### Comparison Against Baseline Approaches
-- **vs. Zoom**: 35% better connection stability in poor network conditions
-- **vs. Google Meet**: 42% faster meeting summarization
-- **vs. Microsoft Teams**: 28% lower CPU utilization
-
-### Error Rate Analysis
-- Error tracking via Sentry with automatic categorization
-- Weekly error review process with 95% resolution rate
-- Mean time to resolution: 6.4 hours
-
-### Task Completion Time Metrics
-- Meeting setup: 30% faster than industry average
-- Document sharing: 65% faster than traditional methods
-- Summary generation: 120 seconds vs. 10+ minutes manual note-taking
-
-### Resource Utilization Measurements
-- CPU usage peaks at 22% on average client devices
-- Memory footprint: 180MB average in browser
-- Network bandwidth: Average 1.2MB/s per participant
-
-## Future Development Roadmap
-
-### Q3 2024
-- AI-powered meeting agenda generation
-- Advanced noise cancellation for improved audio quality
-- Custom virtual backgrounds with AR capabilities
-
-### Q4 2024
-- Multi-language real-time translation
-- Collaborative whiteboarding feature
-- Integration with popular project management tools
-
-### Q1 2025
-- Mobile native applications for iOS and Android
-- Emotion analysis to improve meeting engagement
-- Advanced data analytics dashboard for meeting insights
-
-### Q2 2025
-- VR meeting spaces for immersive collaboration
-- Voice-controlled meeting assistant
-- Enterprise SSO and advanced security features
 
 ## License
 
