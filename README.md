@@ -1,8 +1,8 @@
 # Maestro - AI-Powered Collaborative Video Chat
 
-[![Demo Video](https://img.youtube.com/vi/h1Y_j277T78/0.jpg)](https://youtu.be/h1Y_j277T78)
+[![Demo Video](https://img.youtube.com/vi/3RsRztrCQfQ/0.jpg)](https://youtu.be/3RsRztrCQfQ)
 
-*Watch our demo (sorry forgot to screen record): [https://youtu.be/h1Y_j277T78](https://youtu.be/h1Y_j277T78)*
+*Watch our demo: [https://youtu.be/3RsRztrCQfQ](https://youtu.be/h1Y_j277T78)*
 ![2025-03-15 14 26 34](https://github.com/user-attachments/assets/7d53df84-bb25-4b20-98c4-40e827af99e9)
 
 
